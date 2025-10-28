@@ -11,7 +11,7 @@ const getApiUrl = () => {
   if (process.env.NODE_ENV === 'production') {
     // Use your deployed backend URL here
     // Replace this with your actual backend URL once deployed
-    return 'https://your-backend-url.onrender.com/api';
+    return 'https://ep-project.onrender.com';
   }
   
   // Default to localhost for development
