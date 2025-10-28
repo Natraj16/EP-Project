@@ -3,7 +3,7 @@ import { BarChart3, TrendingUp, Users, DollarSign, Clock, CheckCircle, Download,
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = 'http://localhost:5000/api';
+import API_URL from '../../config/api';
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState('30days');
@@ -1061,6 +1061,8 @@ const Analytics = () => {
 };
 
 export default Analytics;
+
+
 
 
 

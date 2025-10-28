@@ -4,7 +4,7 @@ import { Search, Filter, Eye } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = 'http://localhost:5000/api';
+import API_URL from '../../config/api';
 
 const AdminRequests = () => {
   const [searchParams] = useSearchParams();
@@ -260,6 +260,8 @@ const AdminRequests = () => {
 };
 
 export default AdminRequests;
+
+
 
 
 

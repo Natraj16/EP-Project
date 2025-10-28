@@ -4,7 +4,7 @@ import { Shield, Users, Wrench, Stethoscope, ArrowRight, CheckCircle, Plus, BarC
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+import API_URL from '../config/api';
 
 const Home = () => {
   const { user } = useAuth();
@@ -523,6 +523,7 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
 

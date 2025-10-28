@@ -4,7 +4,7 @@ import { ArrowLeft, Calendar, MapPin, Users, Clock, FileText, Download, MessageC
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = 'http://localhost:5000/api';
+import API_URL from '../../config/api';
 
 const RequestDetail = () => {
   const { id } = useParams();
@@ -296,6 +296,8 @@ const RequestDetail = () => {
 };
 
 export default RequestDetail;
+
+
 
 
 

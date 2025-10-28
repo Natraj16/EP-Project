@@ -4,7 +4,7 @@ import { FileText, Clock, CheckCircle, AlertCircle, TrendingUp, Users } from 'lu
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = 'http://localhost:5000/api';
+import API_URL from '../../config/api';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -286,6 +286,8 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+
 
 
 

@@ -4,7 +4,7 @@ import { ArrowLeft, Save, MessageCircle } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = 'http://localhost:5000/api';
+import API_URL from '../../config/api';
 
 const AdminRequestDetail = () => {
   const { id } = useParams();
@@ -400,6 +400,8 @@ const AdminRequestDetail = () => {
 };
 
 export default AdminRequestDetail;
+
+
 
 
 

@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import axios from 'axios';
+import API_URL from '../config/api';
 
 const Contact = () => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ const Contact = () => {
       setLoading(true);
       
       try {
-        const response = await axios.post('http://localhost:5000/api/contact', values);
+        const response = await axios.post(`${API_URL}/contact`, values);
         
         toast.success(response.data.message || 'Message sent successfully! We\'ll get back to you soon.');
         resetForm();

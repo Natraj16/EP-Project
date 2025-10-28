@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 
-const API_URL = 'http://localhost:5000/api';
+import API_URL from '../../config/api';
 
 const StaffDashboard = () => {
   const { user } = useAuth();
@@ -218,6 +218,8 @@ const StaffDashboard = () => {
 };
 
 export default StaffDashboard;
+
+
 
 
 
