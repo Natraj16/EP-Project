@@ -49,7 +49,7 @@ export const generateRequestPDF = (request) => {
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('Service Request Report', margin, yPosition);
-  
+    
     // Request ID and Status
     yPosition += 10;
     doc.setFontSize(11);
@@ -82,22 +82,21 @@ export const generateRequestPDF = (request) => {
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text('Basic Information', margin + 2, yPosition - 1);
-  
-  yPosition += 8;
-  
-  const basicInfo = [
-    ['Service Type', `${request.serviceType || 'N/A'} - ${request.category || 'N/A'}`],
-    ['Created Date', request.createdAt ? new Date(request.createdAt).toLocaleDateString() : 'N/A'],
-    ['Start Date', request.startDate ? new Date(request.startDate).toLocaleDateString() : 'Not specified'],
-    ['Location', request.location || 'Not specified'],
-  ];
-  
-  doc.autoTable({
-    startY: yPosition,
-    head: [],
-    body: basicInfo,
-    theme: 'plain',
-    styles: {
+    
+    yPosition += 8;
+    
+    const basicInfo = [
+      ['Service Type', `${request.serviceType || 'N/A'} - ${request.category || 'N/A'}`],
+      ['Created Date', request.createdAt ? new Date(request.createdAt).toLocaleDateString() : 'N/A'],
+      ['Start Date', request.startDate ? new Date(request.startDate).toLocaleDateString() : 'Not specified'],
+      ['Location', request.location || 'Not specified'],
+    ];
+    
+    doc.autoTable({
+      startY: yPosition,
+      head: [],
+      body: basicInfo,
+      theme: 'plain',
       fontSize: 10,
       cellPadding: 4,
     },
@@ -117,33 +116,33 @@ export const generateRequestPDF = (request) => {
     doc.setFont('helvetica', 'bold');
     doc.text('Request Details', margin + 2, yPosition - 1);
   
-  yPosition += 8;
-  
-  const requestDetails = [
-    ['Number of Personnel', `${request.numberOfPersonnel || 0} persons`],
-    ['Duration', request.duration || 'N/A'],
-    ['Shift Type', request.shiftType ? request.shiftType.charAt(0).toUpperCase() + request.shiftType.slice(1) : 'N/A'],
-  ];
-  
-  if (request.budget) {
-    requestDetails.push(['Budget', `Rs. ${request.budget.toLocaleString()}`]);
-  }
-  
-  doc.autoTable({
-    startY: yPosition,
-    head: [],
-    body: requestDetails,
-    theme: 'plain',
-    styles: {
-      fontSize: 10,
-      cellPadding: 4,
-    },
-    columnStyles: {
-      0: { fontStyle: 'bold', textColor: secondaryColor, cellWidth: 50 },
-      1: { textColor: [75, 85, 99] },
-    },
-    margin: { left: margin, right: margin },
-  });
+    yPosition += 8;
+    
+    const requestDetails = [
+      ['Number of Personnel', `${request.numberOfPersonnel || 0} persons`],
+      ['Duration', request.duration || 'N/A'],
+      ['Shift Type', request.shiftType ? request.shiftType.charAt(0).toUpperCase() + request.shiftType.slice(1) : 'N/A'],
+    ];
+    
+    if (request.budget) {
+      requestDetails.push(['Budget', `Rs. ${request.budget.toLocaleString()}`]);
+    }
+    
+    doc.autoTable({
+      startY: yPosition,
+      head: [],
+      body: requestDetails,
+      theme: 'plain',
+      styles: {
+        fontSize: 10,
+        cellPadding: 4,
+      },
+      columnStyles: {
+        0: { fontStyle: 'bold', textColor: secondaryColor, cellWidth: 50 },
+        1: { textColor: [75, 85, 99] },
+      },
+      margin: { left: margin, right: margin },
+    });
   
     // Description Section
     if (request.description) {
@@ -162,15 +161,15 @@ export const generateRequestPDF = (request) => {
       doc.setFont('helvetica', 'bold');
       doc.text('Description', margin + 2, yPosition - 1);
     
-    yPosition += 8;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(75, 85, 99);
-    
-    const descriptionLines = doc.splitTextToSize(request.description, pageWidth - 2 * margin);
-    doc.text(descriptionLines, margin, yPosition);
-    yPosition += descriptionLines.length * 5 + 10;
-  }
+      yPosition += 8;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(75, 85, 99);
+      
+      const descriptionLines = doc.splitTextToSize(request.description, pageWidth - 2 * margin);
+      doc.text(descriptionLines, margin, yPosition);
+      yPosition += descriptionLines.length * 5 + 10;
+    }
   
     // Requirements Section
     if (request.requirements) {
@@ -187,15 +186,15 @@ export const generateRequestPDF = (request) => {
       doc.setFont('helvetica', 'bold');
       doc.text('Requirements', margin + 2, yPosition - 1);
     
-    yPosition += 8;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(75, 85, 99);
-    
-    const requirementsLines = doc.splitTextToSize(request.requirements, pageWidth - 2 * margin);
-    doc.text(requirementsLines, margin, yPosition);
-    yPosition += requirementsLines.length * 5 + 10;
-  }
+      yPosition += 8;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(75, 85, 99);
+      
+      const requirementsLines = doc.splitTextToSize(request.requirements, pageWidth - 2 * margin);
+      doc.text(requirementsLines, margin, yPosition);
+      yPosition += requirementsLines.length * 5 + 10;
+    }
   
     // Assigned Staff Section
     if (request.assignedTo) {
@@ -212,35 +211,35 @@ export const generateRequestPDF = (request) => {
       doc.setFont('helvetica', 'bold');
       doc.text('Assigned Staff', margin + 2, yPosition - 1);
     
-    yPosition += 8;
-    
-    const staffInfo = [
-      ['Name', request.assignedTo.name || 'N/A'],
-      ['Email', request.assignedTo.email || 'N/A'],
-    ];
-    
-    if (request.assignedTo.phone) {
-      staffInfo.push(['Phone', request.assignedTo.phone]);
+      yPosition += 8;
+      
+      const staffInfo = [
+        ['Name', request.assignedTo.name || 'N/A'],
+        ['Email', request.assignedTo.email || 'N/A'],
+      ];
+      
+      if (request.assignedTo.phone) {
+        staffInfo.push(['Phone', request.assignedTo.phone]);
+      }
+      
+      doc.autoTable({
+        startY: yPosition,
+        head: [],
+        body: staffInfo,
+        theme: 'plain',
+        styles: {
+          fontSize: 10,
+          cellPadding: 4,
+        },
+        columnStyles: {
+          0: { fontStyle: 'bold', textColor: secondaryColor, cellWidth: 50 },
+          1: { textColor: [75, 85, 99] },
+        },
+        margin: { left: margin, right: margin },
+      });
+      
+      yPosition = doc.lastAutoTable.finalY + 15;
     }
-    
-    doc.autoTable({
-      startY: yPosition,
-      head: [],
-      body: staffInfo,
-      theme: 'plain',
-      styles: {
-        fontSize: 10,
-        cellPadding: 4,
-      },
-      columnStyles: {
-        0: { fontStyle: 'bold', textColor: secondaryColor, cellWidth: 50 },
-        1: { textColor: [75, 85, 99] },
-      },
-      margin: { left: margin, right: margin },
-    });
-    
-    yPosition = doc.lastAutoTable.finalY + 15;
-  }
   
     // Timeline Section
     if (request.timeline && request.timeline.length > 0) {
