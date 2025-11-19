@@ -209,28 +209,28 @@ const ServiceDetail = () => {
             </div>
 
             {/* Why Choose Us */}
-            <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-6">
+            <div className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-700 dark:to-gray-600 rounded-xl p-6">
               <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Why Choose Us?</h3>
               <div className="space-y-4">
                 <div className="flex items-start">
-                  <Clock className="text-primary-600 mr-3 flex-shrink-0" size={24} />
+                  <Clock className="text-primary-600 dark:text-primary-400 mr-3 flex-shrink-0" size={24} />
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-gray-100">Quick Deployment</h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">Fast turnaround on all requests</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-200">Fast turnaround on all requests</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <Award className="text-primary-600 mr-3 flex-shrink-0" size={24} />
+                  <Award className="text-primary-600 dark:text-primary-400 mr-3 flex-shrink-0" size={24} />
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-gray-100">Quality Assured</h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">Thoroughly vetted professionals</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-200">Thoroughly vetted professionals</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <DollarSign className="text-primary-600 mr-3 flex-shrink-0" size={24} />
+                  <DollarSign className="text-primary-600 dark:text-primary-400 mr-3 flex-shrink-0" size={24} />
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-gray-100">Competitive Rates</h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">Best value for your investment</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-200">Best value for your investment</p>
                   </div>
                 </div>
               </div>
