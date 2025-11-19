@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 import API_URL from '../../config/api';
+import { generateRequestPDF } from '../../utils/pdfGenerator';
 
 const RequestDetail = () => {
   const { id } = useParams();
@@ -63,6 +64,16 @@ const RequestDetail = () => {
       // TODO: Send message via API
       console.log('Sending message:', message);
       setMessage('');
+    }
+  };
+
+  const handleDownloadReport = () => {
+    try {
+      generateRequestPDF(request);
+      toast.success('PDF report generated successfully!');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error('Failed to generate PDF report');
     }
   };
 
@@ -266,7 +277,10 @@ const RequestDetail = () => {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
               <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-4">Actions</h3>
               <div className="space-y-3">
-                <button className="btn-outline w-full flex items-center justify-center">
+                <button 
+                  onClick={handleDownloadReport}
+                  className="btn-outline w-full flex items-center justify-center"
+                >
                   <Download size={18} className="mr-2" />
                   Download Report
                 </button>
