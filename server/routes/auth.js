@@ -5,11 +5,12 @@ const User = require('../models/User');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+const ADMIN_SECRET_CODE = process.env.ADMIN_SECRET_CODE || 'PJINFRA2025';
 
 // Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role, phone, company } = req.body;
+    const { name, email, password, role, phone, company, adminCode, requestAdminRole } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -20,12 +21,26 @@ router.post('/register', async (req, res) => {
       });
     }
 
+    // Determine user role
+    let userRole = role || 'client';
+    
+    // If requesting admin role, verify the admin code
+    if (requestAdminRole) {
+      if (!adminCode || adminCode !== ADMIN_SECRET_CODE) {
+        return res.status(403).json({
+          success: false,
+          message: 'Invalid admin verification code'
+        });
+      }
+      userRole = 'admin';
+    }
+
     // Create new user
     const user = new User({
       name,
       email,
       password,
-      role: role || 'client',
+      role: userRole,
       phone,
       company
     });
@@ -41,7 +56,7 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: userRole === 'admin' ? 'Admin registered successfully' : 'User registered successfully',
       data: {
         user: user.toJSON(),
         token

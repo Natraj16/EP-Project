@@ -1,15 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  // Reset click count after 3 seconds of inactivity
+  useEffect(() => {
+    if (clickCount > 0) {
+      const timer = setTimeout(() => setClickCount(0), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [clickCount]);
+
+  // Handle secret clicks on the title to reveal admin registration
+  const handleTitleClick = () => {
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+    
+    if (newCount === 5) {
+      toast.info('Admin registration unlocked!', { autoClose: 2000 });
+      setTimeout(() => {
+        navigate('/register?admin=true');
+      }, 500);
+    } else if (newCount === 3) {
+      toast.info(`${5 - newCount} more clicks...`, { autoClose: 1000 });
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -46,7 +70,11 @@ const Login = () => {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+          <h2 
+            onClick={handleTitleClick}
+            className="text-center text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 cursor-pointer select-none hover:text-primary-600 transition-colors"
+            title="Click me 5 times for admin access"
+          >
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
