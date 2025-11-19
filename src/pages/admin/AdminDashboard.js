@@ -38,8 +38,30 @@ const AdminDashboard = () => {
         }
       });
 
+      // Fetch all users for client count
+      const usersResponse = await axios.get(`${API_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
       if (response.data.success) {
         const requests = response.data.data;
+        const users = usersResponse.data.success ? usersResponse.data.data : [];
+
+        // Current month calculations
+        const now = new Date();
+        const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+        const currentMonthRequests = requests.filter(r => 
+          new Date(r.createdAt) >= currentMonthStart
+        );
+        const lastMonthRequests = requests.filter(r => {
+          const date = new Date(r.createdAt);
+          return date >= lastMonthStart && date <= lastMonthEnd;
+        });
 
         // Calculate stats
         const totalRequests = requests.length;
@@ -47,9 +69,47 @@ const AdminDashboard = () => {
         const inProgressRequests = requests.filter(r => r.status === 'in-progress').length;
         const completedRequests = requests.filter(r => r.status === 'completed').length;
 
-        // Get unique clients
-        const uniqueClients = new Set(requests.map(r => r.client?._id || r.client));
-        const activeClients = uniqueClients.size;
+        // Current month stats for comparison
+        const currentMonthPending = currentMonthRequests.filter(r => r.status === 'pending').length;
+        const lastMonthPending = lastMonthRequests.filter(r => r.status === 'pending').length;
+        
+        const currentMonthInProgress = currentMonthRequests.filter(r => r.status === 'in-progress').length;
+        const lastMonthInProgress = lastMonthRequests.filter(r => r.status === 'in-progress').length;
+        
+        const currentMonthCompleted = currentMonthRequests.filter(r => r.status === 'completed').length;
+        const lastMonthCompleted = lastMonthRequests.filter(r => r.status === 'completed').length;
+
+        // Get active clients (users with role='client')
+        const activeClients = users.filter(u => u.role === 'client').length;
+        const lastMonthClients = users.filter(u => {
+          const date = new Date(u.createdAt);
+          return u.role === 'client' && date >= lastMonthStart && date <= lastMonthEnd;
+        }).length;
+
+        // Calculate growth percentages
+        const totalGrowth = lastMonthRequests.length > 0 
+          ? Math.round(((currentMonthRequests.length - lastMonthRequests.length) / lastMonthRequests.length) * 100)
+          : currentMonthRequests.length > 0 ? 100 : 0;
+
+        const pendingChange = lastMonthPending > 0
+          ? Math.round(((currentMonthPending - lastMonthPending) / lastMonthPending) * 100)
+          : currentMonthPending > 0 ? 100 : 0;
+
+        const inProgressChange = lastMonthInProgress > 0
+          ? Math.round(((currentMonthInProgress - lastMonthInProgress) / lastMonthInProgress) * 100)
+          : currentMonthInProgress > 0 ? 100 : 0;
+
+        const completedChange = lastMonthCompleted > 0
+          ? Math.round(((currentMonthCompleted - lastMonthCompleted) / lastMonthCompleted) * 100)
+          : currentMonthCompleted > 0 ? 100 : 0;
+
+        const clientsChange = lastMonthClients > 0
+          ? Math.round(((activeClients - lastMonthClients) / lastMonthClients) * 100)
+          : activeClients > 0 ? 100 : 0;
+
+        const monthlyGrowth = lastMonthRequests.length > 0
+          ? ((currentMonthRequests.length - lastMonthRequests.length) / lastMonthRequests.length * 100).toFixed(1)
+          : 0;
 
         setStats({
           totalRequests,
@@ -57,7 +117,14 @@ const AdminDashboard = () => {
           inProgressRequests,
           completedRequests,
           activeClients,
-          monthlyGrowth: 0, // Can calculate from date ranges if needed
+          monthlyGrowth,
+          changes: {
+            total: totalGrowth,
+            pending: pendingChange,
+            inProgress: inProgressChange,
+            completed: completedChange,
+            clients: clientsChange,
+          }
         });
 
         // Get recent 5 requests
@@ -84,42 +151,42 @@ const AdminDashboard = () => {
       value: stats.totalRequests,
       icon: FileText,
       color: 'bg-blue-50 text-blue-600',
-      change: '+12%',
+      change: stats.changes?.total ? `${stats.changes.total > 0 ? '+' : ''}${stats.changes.total}%` : '0%',
     },
     {
       label: 'Pending Review',
       value: stats.pendingRequests,
       icon: Clock,
       color: 'bg-yellow-50 text-yellow-600',
-      change: '+3',
+      change: stats.changes?.pending ? `${stats.changes.pending > 0 ? '+' : ''}${stats.changes.pending}%` : '0%',
     },
     {
       label: 'In Progress',
       value: stats.inProgressRequests,
       icon: AlertCircle,
       color: 'bg-purple-50 text-purple-600',
-      change: '+8',
+      change: stats.changes?.inProgress ? `${stats.changes.inProgress > 0 ? '+' : ''}${stats.changes.inProgress}%` : '0%',
     },
     {
       label: 'Completed',
       value: stats.completedRequests,
       icon: CheckCircle,
       color: 'bg-green-50 text-green-600',
-      change: '+15%',
+      change: stats.changes?.completed ? `${stats.changes.completed > 0 ? '+' : ''}${stats.changes.completed}%` : '0%',
     },
     {
       label: 'Active Clients',
       value: stats.activeClients,
       icon: Users,
       color: 'bg-indigo-50 text-indigo-600',
-      change: '+5',
+      change: stats.changes?.clients ? `${stats.changes.clients > 0 ? '+' : ''}${stats.changes.clients}%` : '0%',
     },
     {
       label: 'Monthly Growth',
       value: `${stats.monthlyGrowth}%`,
       icon: TrendingUp,
       color: 'bg-green-50 text-green-600',
-      change: '+2.3%',
+      change: stats.monthlyGrowth > 0 ? `+${stats.monthlyGrowth}%` : `${stats.monthlyGrowth}%`,
     },
   ];
 
